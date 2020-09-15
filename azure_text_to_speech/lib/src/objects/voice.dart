@@ -4,12 +4,12 @@ import 'dart:math';
 
 /// Voice Job
 /// Which contains transfer content, target file, source file and download percentage
-class VoiceJobs {
+class VoiceJob {
   final File sourceFile;
   final File targetFile;
 
   /// Voice used
-  VoiceOptions voice;
+  VoiceOption voice;
 
   /// Job's text content
   String content;
@@ -28,7 +28,7 @@ class VoiceJobs {
 
   /// Whether the job has error
   bool isError;
-  VoiceJobs({this.sourceFile, this.targetFile, this.content, this.voice}) {
+  VoiceJob({this.sourceFile, this.targetFile, this.content, this.voice}) {
     dateTime = DateTime.now();
     isDone = false;
     isError = false;
@@ -67,23 +67,23 @@ class VoiceJobs {
       };
 }
 
-class VoiceOptions {
+class VoiceOption {
   final String name;
   final String lang;
   double speakingSpeed;
   double pitch;
-  VoiceOptions({
+  VoiceOption({
     this.name,
     this.lang,
     this.pitch = 1.0,
     this.speakingSpeed = 1.0,
   });
 
-  factory VoiceOptions.fromJson(Map<String, dynamic> json) {
+  factory VoiceOption.fromJson(Map<String, dynamic> json) {
     if (json == null) {
       return null;
     }
-    return VoiceOptions(
+    return VoiceOption(
       name: json['Name'],
       lang: json['Locale'],
       pitch: json['Pitch'] ?? 0,
@@ -91,13 +91,13 @@ class VoiceOptions {
     );
   }
 
-  factory VoiceOptions.copyWith({
+  factory VoiceOption.copyWith({
     String name,
     String lang,
     double pitch,
     double speakingSpeed,
   }) {
-    return VoiceOptions(
+    return VoiceOption(
       name: name,
       lang: lang,
       pitch: pitch,
@@ -116,7 +116,7 @@ class VoiceOptions {
   }
 
   @override
-  bool operator ==(o) => o is VoiceOptions && o.lang == lang && o.name == name;
+  bool operator ==(o) => o is VoiceOption && o.lang == lang && o.name == name;
 
   int get hasCode => lang.hashCode ^ name.hashCode;
 
