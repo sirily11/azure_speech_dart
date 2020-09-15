@@ -10,7 +10,6 @@ dependencies:
   dio: ^3.0.8
   path: ^1.6.4
   xml: ^3.5.0
-  shared_preferences: ^0.5.6
   sembast: ^2.4.7+6
 
 #dependencies:
