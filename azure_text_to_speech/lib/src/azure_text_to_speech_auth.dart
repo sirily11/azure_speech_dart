@@ -1,9 +1,9 @@
 import 'package:azure_text_to_speech/src/azure_text_to_speech_network.dart';
 import 'package:azure_text_to_speech/src/azure_text_to_speech_settings.dart';
+import 'package:azure_text_to_speech/src/objects/voice.dart';
 import 'package:dio/dio.dart';
 
-class AzureTextToSpeechAuth
-    with AzureTextToSpeechSettings, AzureTextToSpeechNetwork {
+class AzureTextToSpeechAuth with AzureTextToSpeechNetwork {
   final String authEndPoint = 'api.cognitive.microsoft.com/sts/v1.0/issueToken';
   final String voiceEndPoint = 'tts.speech.microsoft.com/cognitiveservices/v1';
   final String avaliableVoiceEndPoint =
@@ -15,10 +15,10 @@ class AzureTextToSpeechAuth
   }
 
   /// Auth and get access token
-  Future<void> auth(String subscribeToken) async {
+  Future<void> auth(String subscribeToken, Area area) async {
     try {
       if (area == null) {
-        return null;
+        throw 'No Area selected';
       }
       var url = 'https://${area.name}.$authEndPoint';
       var response = await network.post(

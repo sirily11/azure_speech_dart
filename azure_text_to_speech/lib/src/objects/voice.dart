@@ -91,6 +91,9 @@ class VoiceOption {
     );
   }
 
+  @override
+  String toString() => '<VoiceOption: $lang - $name />';
+
   factory VoiceOption.copyWith({
     String name,
     String lang,

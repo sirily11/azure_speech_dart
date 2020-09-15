@@ -1,11 +1,19 @@
 import 'dart:async';
 
+import 'package:azure_text_to_speech/src/azure_text_to_speech_auth.dart';
 import 'package:azure_text_to_speech/src/objects/voice.dart';
+import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 
 /// Azure Text To Speech settings
-class AzureTextToSpeechSettings {
+class AzureTextToSpeechSettings extends AzureTextToSpeechAuth {
   final StreamController _areaController = StreamController<Area>();
   final StreamController _optionController = StreamController<VoiceOption>();
+  String subscriptionKey;
+
+  AzureTextToSpeechSettings(
+      {@required this.subscriptionKey, @required Dio network})
+      : super(network: network);
 
   VoiceOption _option;
   Area _selectedArea;
@@ -19,8 +27,25 @@ class AzureTextToSpeechSettings {
     Area(label: 'East Asia', name: 'eastasia')
   ];
 
+  /// Get List of voices
   Future<List<VoiceOption>> getVoiceOption() async {
-    //TODO: Add fetch
+    try {
+      if (accessToken == null) {
+        throw 'No access Token. Try to call auth() before using this method';
+      }
+      var response = await network.get<List<dynamic>>(
+        'https://${_selectedArea.name}.$avaliableVoiceEndPoint',
+        options: Options(headers: {
+          'Authorization': 'Bearer ' + accessToken,
+        }),
+      );
+      var opt = response.data.map((o) => VoiceOption.fromJson(o)).toList();
+
+      return opt;
+    } catch (err) {
+      print(err);
+      rethrow;
+    }
   }
 
   /// Get Selected area
