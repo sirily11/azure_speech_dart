@@ -11,6 +11,7 @@ void main() async {
           '${element.targetFile.path} ${element.percentage * 100}% - ${element.downloadedSize}');
     });
   });
+
   await azure.init(azure.areaList[1]);
   var options = await azure.getVoiceOption();
   azure.option = options[133];

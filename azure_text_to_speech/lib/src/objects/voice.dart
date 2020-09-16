@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'dart:math';
 
+import 'package:azure_text_to_speech/src/objects/voice_styles.dart';
 import 'package:dio/dio.dart';
 
 /// Voice Job
@@ -79,24 +80,35 @@ class VoiceJob {
 class VoiceOption {
   final String name;
   final String lang;
+  VoiceStyles voiceStyles;
   double speakingSpeed;
   double pitch;
+
   VoiceOption({
     this.name,
     this.lang,
-    this.pitch = 1.0,
-    this.speakingSpeed = 1.0,
-  });
+    double pitch,
+    double speakingSpeed,
+    this.voiceStyles = VoiceStyles.General,
+  }) {
+    this.pitch = pitch ?? 1.0;
+    this.speakingSpeed = speakingSpeed ?? 1.0;
+  }
 
   factory VoiceOption.fromJson(Map<String, dynamic> json) {
     if (json == null) {
       return null;
     }
+    // ignore: omit_local_variable_types
+    VoiceStyles styles = VoiceStyles.values
+        .firstWhere((e) => e.toString() == 'VoiceStyles.' + json['Style']);
+
     return VoiceOption(
       name: json['Name'],
       lang: json['Locale'],
       pitch: json['Pitch'] ?? 0,
       speakingSpeed: json['SpeakingSpeed'] ?? 1,
+      voiceStyles: styles,
     );
   }
 
@@ -118,11 +130,17 @@ class VoiceOption {
   }
 
   String get pitchPercentage {
+    if (pitch > 2 || pitch < 0) {
+      throw 'Pitch should within the range 0 and 2';
+    }
     var diff = pitch - 1;
     return '${((diff / 1 / 2) * 100).toStringAsFixed(0)}%';
   }
 
   String get speakingSpeedPercentage {
+    if (speakingSpeed > 3 || speakingSpeed < 0) {
+      throw 'Speaking speed should within the range 0 and 3';
+    }
     var diff = speakingSpeed - 1;
     return '${((diff / 1) * 100).toStringAsFixed(0)}%';
   }
@@ -137,6 +155,7 @@ class VoiceOption {
         'Locale': lang,
         'SpeakingSpeed': speakingSpeed,
         'Pitch': pitch,
+        'Style': voiceStyles,
       };
 }
 
