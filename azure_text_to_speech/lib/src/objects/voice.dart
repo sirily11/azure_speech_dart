@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'dart:math';
 
+import 'package:dio/dio.dart';
+
 /// Voice Job
 /// Which contains transfer content, target file, source file and download percentage
 class VoiceJob {
   final File sourceFile;
   final File targetFile;
+  final CancelToken cancelToken;
 
   /// Voice used
   VoiceOption voice;
@@ -28,7 +31,13 @@ class VoiceJob {
 
   /// Whether the job has error
   bool isError;
-  VoiceJob({this.sourceFile, this.targetFile, this.content, this.voice}) {
+  VoiceJob({
+    this.sourceFile,
+    this.targetFile,
+    this.content,
+    this.voice,
+    this.cancelToken,
+  }) {
     dateTime = DateTime.now();
     isDone = false;
     isError = false;

@@ -60,8 +60,8 @@ class AzureTextToSpeechSettings extends AzureTextToSpeechAuth {
   /// Get selected option
   VoiceOption get option => _option;
 
-  /// Set selected option
-  set options(VoiceOption option) {
+  /// Set selected voice option
+  set option(VoiceOption option) {
     _option = VoiceOption.copyWith(
       name: option.name,
       lang: option.lang,

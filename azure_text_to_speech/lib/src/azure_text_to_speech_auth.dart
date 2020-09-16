@@ -3,7 +3,7 @@ import 'package:azure_text_to_speech/src/azure_text_to_speech_settings.dart';
 import 'package:azure_text_to_speech/src/objects/voice.dart';
 import 'package:dio/dio.dart';
 
-class AzureTextToSpeechAuth with AzureTextToSpeechNetwork {
+class AzureTextToSpeechAuth extends AzureTextToSpeechNetwork {
   final String authEndPoint = 'api.cognitive.microsoft.com/sts/v1.0/issueToken';
   final String voiceEndPoint = 'tts.speech.microsoft.com/cognitiveservices/v1';
   final String avaliableVoiceEndPoint =
