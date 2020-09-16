@@ -5,6 +5,7 @@
 # Omit commiting pubspec.lock for library packages:
 # https://dart.dev/guides/libraries/private-files#pubspeclock
 pubspec.lock
+*.wav
 
 # Conventional directory for build outputs
 build/
@@ -12,4 +13,4 @@ build/
 # Directory created by dartdoc
 doc/api/
 
-example/azure_text_to_speech_example.dart
+example/key.dart

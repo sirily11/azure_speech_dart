@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:azure_text_to_speech/src/azure_text_to_speech_settings.dart';
 import 'package:meta/meta.dart';
 import 'package:xml/xml.dart' as xml;
-import 'package:azure_text_to_speech/src/azure_text_to_speech_auth.dart';
 import 'package:azure_text_to_speech/src/azure_text_to_speech_local.dart';
 import 'package:azure_text_to_speech/src/objects/voice.dart';
 import 'package:dio/dio.dart';
@@ -20,10 +19,12 @@ class AzureTextToSpeech extends AzureTextToSpeechSettings
   bool _isWorking;
 
   final _controller = StreamController<List<VoiceJob>>();
+
   // Private variable which represents the job list
   final _jobs = <VoiceJob>[];
 
-  Stream<List<VoiceJob>> get jobs => _controller.stream;
+  /// List of voice jobs
+  Stream<List<VoiceJob>> get jobStream => _controller.stream;
 
   AzureTextToSpeech({Dio network, @required String subscriptionKey})
       : super(network: network, subscriptionKey: subscriptionKey) {
@@ -62,10 +63,11 @@ class AzureTextToSpeech extends AzureTextToSpeechSettings
 
   /// Cancel the voice [job]
   void cancelVoiceJob(VoiceJob job) {
-    job.cancelToken.cancel();
+    job.cancelToken?.cancel();
     job.isDone = false;
     job.percentage = 0;
     job.downloaded = 0;
+    _controller.add(_jobs);
   }
 
   Future<void> _transformSingle(VoiceJob job) async {
@@ -134,6 +136,7 @@ class AzureTextToSpeech extends AzureTextToSpeechSettings
     } on DioError catch (err) {
       job.isError = true;
       _controller.add(_jobs);
+      _controller.addError(err);
     } finally {
       _isWorking = false;
     }
