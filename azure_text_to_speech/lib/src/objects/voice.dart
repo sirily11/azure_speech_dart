@@ -99,9 +99,12 @@ class VoiceOption {
     if (json == null) {
       return null;
     }
-    // ignore: omit_local_variable_types
-    VoiceStyles styles = VoiceStyles.values
-        .firstWhere((e) => e.toString() == 'VoiceStyles.' + json['Style']);
+
+    VoiceStyles styles;
+    if (json['Style'] != null) {
+      styles = VoiceStyles.values
+          .firstWhere((e) => e.toString() == 'VoiceStyles.' + json['Style']);
+    }
 
     return VoiceOption(
       name: json['Name'],
@@ -120,12 +123,14 @@ class VoiceOption {
     String lang,
     double pitch,
     double speakingSpeed,
+    VoiceStyles styles,
   }) {
     return VoiceOption(
       name: name,
       lang: lang,
       pitch: pitch,
       speakingSpeed: speakingSpeed,
+      voiceStyles: styles,
     );
   }
 
@@ -157,28 +162,4 @@ class VoiceOption {
         'Pitch': pitch,
         'Style': voiceStyles,
       };
-}
-
-class Area {
-  final String label;
-  final String name;
-
-  Area({this.label, this.name});
-
-  @override
-  bool operator ==(o) => o is Area && o.label == label && o.name == name;
-
-  int get hasCode => label.hashCode ^ name.hashCode;
-
-  factory Area.fromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      return null;
-    }
-    return Area(
-      name: json['name'],
-      label: json['label'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {'label': label, 'name': name};
 }

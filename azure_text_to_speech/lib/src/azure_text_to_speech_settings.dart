@@ -5,6 +5,8 @@ import 'package:azure_text_to_speech/src/objects/voice.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
+import '../azure_text_to_speech.dart';
+
 /// Azure Text To Speech settings
 class AzureTextToSpeechSettings extends AzureTextToSpeechAuth {
   final StreamController _areaController = StreamController<Area>();
@@ -18,28 +20,20 @@ class AzureTextToSpeechSettings extends AzureTextToSpeechAuth {
   VoiceOption _option;
   Area _selectedArea;
 
-  /// List of areas avaliable
-  final List<Area> areaList = [
-    Area(label: 'Central US', name: 'centralus'),
-    Area(label: 'East US', name: 'eastus'),
-    Area(label: 'East US2', name: 'eastus2'),
-    Area(label: 'Japan East', name: 'japaneast'),
-    Area(label: 'East Asia', name: 'eastasia')
-  ];
-
   /// Get List of voices
-  Future<List<VoiceOption>> getVoiceOption() async {
+  Future<List<VoiceOption>> getVoiceOptions() async {
     try {
       if (accessToken == null) {
         throw 'No access Token. Try to call auth() before using this method';
       }
-      var response = await network.get<List<dynamic>>(
+      var response = await network.get(
         'https://${_selectedArea.name}.$avaliableVoiceEndPoint',
         options: Options(headers: {
           'Authorization': 'Bearer ' + accessToken,
         }),
       );
-      var opt = response.data.map((o) => VoiceOption.fromJson(o)).toList();
+      var opt =
+          (response.data as List).map((o) => VoiceOption.fromJson(o)).toList();
 
       return opt;
     } catch (err) {
@@ -74,12 +68,18 @@ class AzureTextToSpeechSettings extends AzureTextToSpeechAuth {
 
   /// Set voice speaking speed
   set voiceSpeakingSpeed(double speed) {
+    if (speed < 0 || speed > 3) {
+      throw 'Speaking speed should within the range 0 and 3';
+    }
     _option?.speakingSpeed = speed;
     _optionController.add(option);
   }
 
   /// Set voice pitch
   set voicePitch(double pitch) {
+    if (pitch < 0 || pitch > 2) {
+      throw 'Speaking pitch should within the range 0 and 2';
+    }
     _option?.pitch = pitch;
     _optionController.add(option);
   }

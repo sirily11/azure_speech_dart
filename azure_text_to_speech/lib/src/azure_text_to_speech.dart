@@ -8,6 +8,8 @@ import 'package:azure_text_to_speech/src/azure_text_to_speech_local.dart';
 import 'package:azure_text_to_speech/src/objects/voice.dart';
 import 'package:dio/dio.dart';
 
+import '../azure_text_to_speech.dart';
+
 /// This is a azure text to speech converter based on the azure api.
 /// In order to use this library, you need to provide a subsription key.
 /// Then call init method to initialize the library.

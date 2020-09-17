@@ -12,8 +12,8 @@ void main() async {
     });
   });
 
-  await azure.init(azure.areaList[1]);
-  var options = await azure.getVoiceOption();
+  await azure.init(Area.center_us);
+  var options = await azure.getVoiceOptions();
   azure.option = options[133];
   var file = File('output.wav')..createSync();
 
