@@ -15,6 +15,9 @@ class AzureTextToSpeechLocal {
 
   /// List of jobs which has been done before
   Stream<List<VoiceJob>> get getVoiceJobsFromDBStream {
+    if (_database == null) {
+      throw 'You need to call initLocal first';
+    }
     var finder = Finder(sortOrders: [SortOrder('time')]);
     var store = StoreRef.main();
     return store.query(finder: finder).onSnapshots(_database).map(

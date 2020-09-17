@@ -12,7 +12,7 @@ void main() async {
         'print selected voice: ${event.name} - ${event.pitch} - ${event.speakingSpeed}');
   });
 
-  await azure.init(Area.center_us);
+  await azure.init(Area.east_us);
   var options = await azure.getVoiceOptions();
   azure.option = options[0];
   azure.voiceSpeakingSpeed = 2.0;

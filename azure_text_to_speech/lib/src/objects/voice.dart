@@ -114,19 +114,24 @@ class VoiceOption {
       return null;
     }
 
-    VoiceStyles styles;
+    var styles = VoiceStyles.General;
     if (json['Style'] != null) {
-      styles = VoiceStyles.values
-          .firstWhere((e) => e.toString() == 'VoiceStyles.' + json['Style']);
+      styles = VoiceStyles.values.firstWhere(
+        (e) => e.toString() == 'VoiceStyles.' + json['Style'],
+        orElse: () => null,
+      );
     }
-
-    return VoiceOption(
-      name: json['Name'],
-      lang: json['Locale'],
-      pitch: json['Pitch'] ?? 0,
-      speakingSpeed: json['SpeakingSpeed'] ?? 1,
-      voiceStyles: styles,
-    );
+    try {
+      return VoiceOption(
+        name: json['Name'],
+        lang: json['Locale'],
+        pitch: json['Pitch'] ?? 0,
+        speakingSpeed: json['SpeakingSpeed'] ?? 1,
+        voiceStyles: styles,
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   @override

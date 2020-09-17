@@ -5,6 +5,7 @@ import 'key.dart';
 
 void main() async {
   var azure = AzureTextToSpeech(subscriptionKey: kSubscriptionKey);
+  await azure.init(Area.east_us);
   azure.jobStream.listen((e) {
     e.forEach((element) {
       print(
@@ -12,7 +13,11 @@ void main() async {
     });
   });
 
-  await azure.init(Area.center_us);
+  azure.getVoiceJobsFromDBStream.listen((e) {
+    print('Finished');
+    print(e);
+  });
+
   var options = await azure.getVoiceOptions();
   azure.option = options[133];
   var file = File('output.wav')..createSync();
