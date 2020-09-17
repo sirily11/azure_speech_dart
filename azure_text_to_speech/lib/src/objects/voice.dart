@@ -33,13 +33,16 @@ class VoiceJob {
   /// Whether the job has error
   bool isError;
   VoiceJob({
+    num dateTime,
     this.sourceFile,
     this.targetFile,
     this.content,
     this.voice,
     this.cancelToken,
   }) {
-    dateTime = DateTime.now();
+    this.dateTime = dateTime != null
+        ? DateTime.fromMillisecondsSinceEpoch(dateTime)
+        : DateTime.now();
     isDone = false;
     isError = false;
     downloaded = 0;
@@ -68,9 +71,20 @@ class VoiceJob {
     return '${downloaded.toStringAsFixed(2)} bytes';
   }
 
+  factory VoiceJob.fromJson(json) => VoiceJob(
+        dateTime: json['time'],
+        sourceFile:
+            json['input_path'] != null ? File(json['input_path']) : null,
+        targetFile:
+            json['output_path'] != null ? File(json['output_path']) : null,
+        voice:
+            json['voice'] != null ? VoiceOption.fromJson(json['voice']) : null,
+        content: json['content'],
+      );
+
   Map<String, dynamic> toJson() => {
         'time': dateTime.millisecondsSinceEpoch,
-        'output_path': targetFile.path,
+        'output_path': targetFile?.path,
         'input_path': sourceFile?.path,
         'voice': voice?.toJson(),
         'content': content,
@@ -160,6 +174,6 @@ class VoiceOption {
         'Locale': lang,
         'SpeakingSpeed': speakingSpeed,
         'Pitch': pitch,
-        'Style': voiceStyles,
+        'Style': voiceStyles.toString(),
       };
 }

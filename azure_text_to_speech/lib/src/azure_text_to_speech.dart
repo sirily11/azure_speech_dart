@@ -64,7 +64,7 @@ class AzureTextToSpeech extends AzureTextToSpeechSettings
   }
 
   /// Cancel the voice [job]
-  void cancelVoiceJob(VoiceJob job) {
+  Future<void> cancelVoiceJob(VoiceJob job) async {
     job.cancelToken?.cancel();
     job.isDone = false;
     job.percentage = 0;
@@ -141,6 +141,9 @@ class AzureTextToSpeech extends AzureTextToSpeechSettings
       _controller.addError(err);
     } finally {
       _isWorking = false;
+      if (job.isDone) {
+        await addVoiceJob(job);
+      }
     }
   }
 
